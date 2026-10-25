@@ -178,17 +178,16 @@ while True:
 
     # 1. プレイヤーのターン
     if player_moves:
-        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        print("打てる場所:", ", ".join(move_to_text(m) for m in player_moves))
-        print()
+        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        st.write("打てる場所:", ", ".join(move_to_text(m) for m in player_moves))
+        st.write()
 
-        time.sleep(0.2)
 
         while True:
-            move = input("手を入力（例:D3）: ").upper().strip()
+            move = st.text_input("手を入力（例:D3）",
+    　　　　　　　　　key="player_move").upper().strip()
             try:
                 if len(move) < 2:
                     raise ValueError
@@ -199,17 +198,16 @@ while True:
                     make_move(row, col, PLAYER)
                     last_move = (row, col)  # プレイヤーの手を記録
                     break
-                print("そこには置けません")
+                st.write("そこには置けません")
             except:
-                print("入力例: D3 （正しい形式で入力してください）")
+                st.write("入力例: D3 （正しい形式で入力してください）")
     else:
         # 置く場所がない（パス）の場合の処理
-        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        print("⚠️ あなたは置ける場所がないためパスです。")
-        input("Enterキーを押してCPUの番に進んでください...")
+        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        st.write("⚠️ あなたは置ける場所がないためパスです。")
+        st.text_input("Enterキーを押してCPUの番に進んでください...")
 
     # 2. CPUのターン
     cpu_moves = get_valid_moves(CPU)
@@ -218,42 +216,35 @@ while True:
         break
 
     if cpu_moves:
-        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        print("🤖 CPUが考え中...")
-        time.sleep(1.0)
+        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        st.write("🤖 CPUが考え中...")
 
         move = cpu_choice(cpu_moves)
         make_move(move[0], move[1], CPU)
         last_move = move  # CPUの手を記録
 
-        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        print(f"🤖 CPUは {move_to_text(move)} に置きました。")
-        time.sleep(1.5)
+        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        st.write(f"🤖 CPUは {move_to_text(move)} に置きました。")
     else:
-        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        print("🤖 CPUは置ける場所がないためパスしました。")
-        time.sleep(2.0)
+        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        st.write("🤖 CPUは置ける場所がないためパスしました。")
 
 # --- 終了画面 ---
-clear_output(wait=True)
 draw_board(last_move)
 black, white = count_stones()
 
-print("=== ゲーム終了 ===")
-print(f"黒(あなた): {black} | 白(CPU): {white}\n")
+st.write("=== ゲーム終了 ===")
+st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
 
 if black > white:
-    print("🎉 あなたの勝ち！")
+    st.write("🎉 あなたの勝ち！")
 elif white > black:
-    print("🤖 CPUの勝ち！")
+    st.write("🤖 CPUの勝ち！")
 else:
-    print("🤝 引き分け！")
+    st.write("🤝 引き分け！")
