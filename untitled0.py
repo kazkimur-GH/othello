@@ -10,7 +10,7 @@ Original file is located at
 import random
 import time
 import matplotlib.pyplot as plt
-from IPython.display import clear_output, display, HTML
+import streamlit as st
 
 SIZE = 8
 
@@ -39,8 +39,6 @@ def init_board():
 
 
 def draw_board(last_move=None):
-    display(HTML("<style>input[type=text], .raw_input { width: 250px !important; }</style>"))
-
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.set_facecolor("#008000")
 
@@ -83,7 +81,7 @@ def draw_board(last_move=None):
     ax.tick_params(length=0)
 
     plt.title("オセロ", fontsize=16)
-    plt.show()
+    st.pyplot(fig)
     plt.close(fig)
 
 
