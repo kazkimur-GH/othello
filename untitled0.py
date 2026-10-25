@@ -10,7 +10,7 @@ Original file is located at
 import random
 import time
 import matplotlib.pyplot as plt
-import streamlit as st
+from IPython.display import clear_output, display, HTML
 
 SIZE = 8
 
@@ -39,6 +39,8 @@ def init_board():
 
 
 def draw_board(last_move=None):
+    display(HTML("<style>input[type=text], .raw_input { width: 250px !important; }</style>"))
+
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.set_facecolor("#008000")
 
@@ -81,7 +83,7 @@ def draw_board(last_move=None):
     ax.tick_params(length=0)
 
     plt.title("オセロ", fontsize=16)
-    st.pyplot(fig)
+    plt.show()
     plt.close(fig)
 
 
@@ -178,16 +180,17 @@ while True:
 
     # 1. プレイヤーのターン
     if player_moves:
+        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        st.write("打てる場所:", ", ".join(move_to_text(m) for m in player_moves))
-        st.write()
+        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        print("打てる場所:", ", ".join(move_to_text(m) for m in player_moves))
+        print()
 
+        time.sleep(0.2)
 
         while True:
-            move = st.text_input("手を入力（例:D3）",
-    　　　　　　　　　key="player_move").upper().strip()
+            move = input("手を入力（例:D3）: ").upper().strip()
             try:
                 if len(move) < 2:
                     raise ValueError
@@ -198,16 +201,17 @@ while True:
                     make_move(row, col, PLAYER)
                     last_move = (row, col)  # プレイヤーの手を記録
                     break
-                st.write("そこには置けません")
+                print("そこには置けません")
             except:
-                st.write("入力例: D3 （正しい形式で入力してください）")
+                print("入力例: D3 （正しい形式で入力してください）")
     else:
         # 置く場所がない（パス）の場合の処理
+        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        st.write("⚠️ あなたは置ける場所がないためパスです。")
-        st.text_input("Enterキーを押してCPUの番に進んでください...")
+        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        print("⚠️ あなたは置ける場所がないためパスです。")
+        input("Enterキーを押してCPUの番に進んでください...")
 
     # 2. CPUのターン
     cpu_moves = get_valid_moves(CPU)
@@ -216,35 +220,42 @@ while True:
         break
 
     if cpu_moves:
+        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        st.write("🤖 CPUが考え中...")
+        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        print("🤖 CPUが考え中...")
+        time.sleep(1.0)
 
         move = cpu_choice(cpu_moves)
         make_move(move[0], move[1], CPU)
         last_move = move  # CPUの手を記録
 
+        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        st.write(f"🤖 CPUは {move_to_text(move)} に置きました。")
+        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        print(f"🤖 CPUは {move_to_text(move)} に置きました。")
+        time.sleep(1.5)
     else:
+        clear_output(wait=True)
         draw_board(last_move)
         black, white = count_stones()
-        st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
-        st.write("🤖 CPUは置ける場所がないためパスしました。")
+        print(f"黒(あなた): {black} | 白(CPU): {white}\n")
+        print("🤖 CPUは置ける場所がないためパスしました。")
+        time.sleep(2.0)
 
 # --- 終了画面 ---
+clear_output(wait=True)
 draw_board(last_move)
 black, white = count_stones()
 
-st.write("=== ゲーム終了 ===")
-st.write(f"黒(あなた): {black} | 白(CPU): {white}\n")
+print("=== ゲーム終了 ===")
+print(f"黒(あなた): {black} | 白(CPU): {white}\n")
 
 if black > white:
-    st.write("🎉 あなたの勝ち！")
+    print("🎉 あなたの勝ち！")
 elif white > black:
-    st.write("🤖 CPUの勝ち！")
+    print("🤖 CPUの勝ち！")
 else:
-    st.write("🤝 引き分け！")
+    print("🤝 引き分け！")
